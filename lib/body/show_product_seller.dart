@@ -14,6 +14,7 @@ class _ShowProductSellerState extends State<ShowProductSeller> {
     return Scaffold(
       body: Text('This is Show Product'),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: MyConstant.primary,
         onPressed: () =>
             Navigator.pushNamed(context, MyConstant.routeAddProduce),
         child: Text('Add'),

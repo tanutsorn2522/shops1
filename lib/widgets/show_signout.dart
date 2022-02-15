@@ -20,7 +20,7 @@ class showSignOut extends StatelessWidget {
                       context, MyConstant.routeAuthen, (route) => false),
                 );
           },
-          tileColor: Colors.red.shade900,
+          tileColor: Colors.red.shade400,
           leading: Icon(
             Icons.exit_to_app,
             size: 36,

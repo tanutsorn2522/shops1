@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class MyConstant {
   // Genernal
   static String appName = 'CHANYONT';
-  static String domain = 'https://f582-49-49-73-66.ngrok.io';
+  static String domain = 'https://9161-49-49-73-66.ngrok.io';
 
   // Route
   static String routeAuthen = '/authen';
@@ -21,6 +21,13 @@ class MyConstant {
   static String image4 = 'images/shops4.png';
   static String image5 = 'images/shops5.png';
   static String avatar = 'images/avatar.png';
+  static String camera = 'images/camera.png';
+  static String camera1 = 'images/camera1.png';
+  static String camera2 = 'images/camera2.png';
+  static String folderimage = 'images/folder_image.png';
+  static String imageicon = 'images/image_icon.png';
+  static String imageicon1 = 'images/image_icon1.png';
+  static String imageicon2 = 'images/image_icon2.png';
 
   // Color
   static Color primary = Color(0xffdd0000);
