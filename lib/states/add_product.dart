@@ -1,10 +1,13 @@
 // ignore_for_file: deprecated_member_use
 
 import 'dart:io';
+import 'dart:math';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shops/utility/my_constant.dart';
+import 'package:shops/utility/my_dialog.dart';
 import 'package:shops/widgets/show_image.dart';
 import 'package:shops/widgets/show_title.dart';
 
@@ -37,7 +40,11 @@ class _AddProductState extends State<AddProduct> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: [IconButton(onPressed: () {}, icon: Icon(Icons.cloud_upload))],
+        actions: [
+          IconButton(
+              onPressed: () => processAddProduct(),
+              icon: Icon(Icons.cloud_upload))
+        ],
         title: Text('Add Product'),
       ),
       body: LayoutBuilder(
@@ -71,11 +78,41 @@ class _AddProductState extends State<AddProduct> {
       child: ElevatedButton(
         style: MyConstant().myButtonStyle(),
         onPressed: () {
-          if (formKey.currentState!.validate()) {}
+          processAddProduct();
         },
         child: Text('เพิ่มสินค้า'),
       ),
     );
+  }
+
+  Future<Null> processAddProduct() async {
+    if (formKey.currentState!.validate()) {
+      bool checkFile = true;
+      for (var item in files) {
+        if (item == null) {
+          checkFile = false;
+        }
+      }
+      if (checkFile) {
+        print('## choose 4 image success');
+        String apiSaveProduct = '${MyConstant.domain}/shops/saveProduct.php';
+
+        for (var item in files) {
+          int i = Random().nextInt(1000000000);
+          String nameFile = 'product$i.jpg';
+          Map<String, dynamic> map = {};
+          map['file'] =
+              await MultipartFile.fromFile(item!.path, filename: nameFile);
+          FormData data = FormData.fromMap(map);
+          await Dio()
+              .post(apiSaveProduct, data: data)
+              .then((value) => print('Upload Success'));
+        }
+      } else {
+        MyDialog()
+            .normalDialog(context, 'More Image', 'Please Choose More Image');
+      }
+    }
   }
 
   Future<Null> processImagePicker(ImageSource source, int index) async {
