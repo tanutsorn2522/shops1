@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shops/states/add_product.dart';
 import 'package:shops/states/authen.dart';
 import 'package:shops/states/buyer_service.dart';
 import 'package:shops/states/create.account.dart';
@@ -13,6 +14,7 @@ final Map<String, WidgetBuilder> map = {
   '/buyerService': (BuildContext context) => BuyerService(),
   '/sellerService': (BuildContext context) => SellerService(),
   '/riderService': (BuildContext context) => RiderService(),
+  '/addProduct': (BuildContext context) => AddProduct(),
 };
 
 String? initlalRoute;
