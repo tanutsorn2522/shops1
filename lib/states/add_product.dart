@@ -37,6 +37,7 @@ class _AddProductState extends State<AddProduct> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [IconButton(onPressed: () {}, icon: Icon(Icons.cloud_upload))],
         title: Text('Add Product'),
       ),
       body: LayoutBuilder(
