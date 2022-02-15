@@ -295,6 +295,10 @@ class _CreateAccountState extends State<CreateAccount> {
                 borderSide: BorderSide(color: MyConstant.light),
                 borderRadius: BorderRadius.circular(10),
               ),
+              errorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.red),
+                borderRadius: BorderRadius.circular(10),
+              ),
             ),
           ),
         ),
@@ -457,6 +461,10 @@ class _CreateAccountState extends State<CreateAccount> {
                 borderSide: BorderSide(color: MyConstant.light),
                 borderRadius: BorderRadius.circular(10),
               ),
+              errorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.red),
+                borderRadius: BorderRadius.circular(10),
+              ),
             ),
           ),
         ),
@@ -492,6 +500,10 @@ class _CreateAccountState extends State<CreateAccount> {
               ),
               focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: MyConstant.light),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.red),
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
@@ -530,6 +542,10 @@ class _CreateAccountState extends State<CreateAccount> {
                 borderSide: BorderSide(color: MyConstant.light),
                 borderRadius: BorderRadius.circular(10),
               ),
+              errorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.red),
+                borderRadius: BorderRadius.circular(10),
+              ),
             ),
           ),
         ),
@@ -564,6 +580,10 @@ class _CreateAccountState extends State<CreateAccount> {
               ),
               focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: MyConstant.light),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.red),
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
