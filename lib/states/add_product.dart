@@ -133,7 +133,7 @@ class _AddProductState extends State<AddProduct> {
               print('### images ==> $images');
 
               String path =
-                  '${MyConstant.domain}/shops/insertProduct.php?isAdd=true&idSeller=$idSeller&nameSeller=$nameSeller&name=$name&price=$price&detail=$detail&image=$images';
+                  '${MyConstant.domain}/shops/insertProduct.php?isAdd=true&idSeller=$idSeller&nameSeller=$nameSeller&name=$name&price=$price&detail=$detail&images=$images';
 
               await Dio().get(path).then((value) => Navigator.pop(context));
 
