@@ -29,6 +29,10 @@ class _ShowProductSellerState extends State<ShowProductSeller> {
   }
 
   Future<Null> loadValueFromAPI() async {
+    if (productModels.length != 0) {
+      productModels.clear();
+    } else {}
+
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String id = preferences.getString('id')!;
 
@@ -82,7 +86,8 @@ class _ShowProductSellerState extends State<ShowProductSeller> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: MyConstant.primary,
         onPressed: () =>
-            Navigator.pushNamed(context, MyConstant.routeAddProduce),
+            Navigator.pushNamed(context, MyConstant.routeAddProduce)
+                .then((value) => loadValueFromAPI()),
         child: Text('Add'),
       ),
     );
@@ -198,7 +203,15 @@ class _ShowProductSellerState extends State<ShowProductSeller> {
             child: Text('Cancel'),
           ),
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () async {
+              print('## Confirm Delete at id ==> ${productModel.id}');
+              String apiDeleteProductWhereId =
+                  '${MyConstant.domain}/shops/deleteProductWhereId.php?isAdd=true&id=${productModel.id}';
+              await Dio().get(apiDeleteProductWhereId).then((value) {
+                Navigator.pop(context);
+                loadValueFromAPI();
+              });
+            },
             child: Text('Delete'),
           ),
         ],

@@ -14,10 +14,24 @@ if (!$link) {
 	if (isset($_GET)) {
 	if ($_GET['isAdd'] == 'true') {
 			
-		$id = $_GET['id'];		
+		$id = $_GET['id'];
+
+		$sql_select = "SELECT * FROM product WHERE id = '$id'";
+		$result = mysqli_query($link, $sql_select);
+		$row = mysqli_fetch_array($result);				
+    		$image = $row['images'];
+    		$images_sub1 = substr($image,1);
+    		$images_sub2 = substr($images_sub1,0,-1);
+    		$images = explode(', ', $images_sub2);
+    		$count = count($images);   		
+    		
+    	for($i = 0; $i < $count; $i++){
+    		$path = "img/products/".$images[$i];
+    			@unlink($path);
+    			echo $path;
+		}
 									
 		$sql = "DELETE FROM product WHERE id = '$id'";
-
 		$result = mysqli_query($link, $sql);
 
 		if ($result) {
