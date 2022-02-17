@@ -23,6 +23,7 @@ if (isset($_GET)) {
 		$address = $_GET['address'];
 		$phone = $_GET['phone'];
 		$user = $_GET['user'];
+		//$password = md5($_GET['password']);
 		$password = $_GET['password'];
 		$avatar = $_GET['avatar'];
 		$lat = $_GET['lat'];

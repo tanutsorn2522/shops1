@@ -23,11 +23,11 @@ if (isset($_GET)) {
 		$name = $_GET['name'];
 		$price = $_GET['price'];
 		$detail = $_GET['detail'];
-		$image = $_GET['image'];
+		$images = $_GET['images'];
 
 		
 							
-		$sql = "INSERT INTO `product`(`id`, `idSeller`, `nameSeller`, `name`, `price`, `detail`, `image`) VALUES (null,'$idSeller','$nameSeller','$name','$price','$detail','$image')";
+		$sql = "INSERT INTO `product`(`id`, `idSeller`, `nameSeller`, `name`, `price`, `detail`, `images`) VALUES (null,'$idSeller','$nameSeller','$name','$price','$detail','$images')";
 
 		$result = mysqli_query($link, $sql);
 
