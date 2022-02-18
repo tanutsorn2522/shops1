@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shops/models/product_model.dart';
+import 'package:shops/states/edit_product.dart';
 import 'package:shops/utility/my_constant.dart';
 import 'package:shops/widgets/show_image.dart';
 import 'package:shops/widgets/show_progress.dart';
@@ -150,7 +151,16 @@ class _ShowProductSellerState extends State<ShowProductSeller> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          print('## You Click Edit');
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EditProduct(
+                                  productModel: productModels[index],
+                                ),
+                              ));
+                        },
                         icon: Icon(
                           Icons.edit_outlined,
                           size: 24,
