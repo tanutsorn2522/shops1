@@ -30,6 +30,7 @@ class _EditProductState extends State<EditProduct> {
   TextEditingController detailController = TextEditingController();
 
   List<String> pathImages = [];
+  List<String> oldImages = [];
   List<File?> files = [];
   bool statusImage = false; //false => ไม่มีการเปลี่ยนแปลง
 
@@ -267,10 +268,12 @@ class _EditProductState extends State<EditProduct> {
         int index = 0;
         for (var item in files) {
           if (item != null) {
+            String oldImages = pathImages[index];
+            print('## oldImage ==>> $oldImages');
             int i = Random().nextInt(1000000);
             String nameImage = 'productEdit$i.jpg';
             String apiUploadImage =
-                '${MyConstant.domain}/shops/saveProduct.php';
+                '${MyConstant.domain}/shops/saveProduct.php?oldImages=$oldImages';
             Map<String, dynamic> map = {};
             map['file'] =
                 await MultipartFile.fromFile(item.path, filename: nameImage);
@@ -291,6 +294,10 @@ class _EditProductState extends State<EditProduct> {
       print('## StatusImage = $statusImage');
       print('## id = $id, name = $name, price = $price, detail = $detail');
       print('## images = $images');
+
+      String apiEditProduct =
+          '${MyConstant.domain}/shops/editProductWhereId.php?isAdd=true&id=$id&name=$name&price=$price&detail=$detail&images=$images';
+      await Dio().get(apiEditProduct).then((value) => Navigator.pop(context));
     }
   }
 }
