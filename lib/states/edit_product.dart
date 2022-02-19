@@ -1,8 +1,16 @@
+// ignore_for_file: deprecated_member_use, avoid_print
+
+import 'dart:io';
+import 'dart:math';
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shops/models/product_model.dart';
 import 'package:shops/utility/my_constant.dart';
+import 'package:shops/utility/my_dialog.dart';
 import 'package:shops/widgets/show_progress.dart';
 import 'package:shops/widgets/show_title.dart';
 
@@ -22,6 +30,8 @@ class _EditProductState extends State<EditProduct> {
   TextEditingController detailController = TextEditingController();
 
   List<String> pathImages = [];
+  List<File?> files = [];
+  bool statusImage = false; //false => ไม่มีการเปลี่ยนแปลง
 
   final formKey = GlobalKey<FormState>();
 
@@ -45,6 +55,7 @@ class _EditProductState extends State<EditProduct> {
     List<String> strings = string.split(',');
     for (var item in strings) {
       pathImages.add(item.trim());
+      files.add(null);
     }
     print('### pathImages ==>> $pathImages');
   }
@@ -105,6 +116,18 @@ class _EditProductState extends State<EditProduct> {
     );
   }
 
+  Future<Null> chooseImage(int index, ImageSource source) async {
+    try {
+      // ignore: deprecated_member_use
+      var result = await ImagePicker()
+          .getImage(source: source, maxWidth: 800, maxHeight: 800);
+      setState(() {
+        files[index] = File(result!.path);
+        statusImage = true;
+      });
+    } catch (e) {}
+  }
+
   Container buildImage(BoxConstraints constraints, int index) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
@@ -116,20 +139,22 @@ class _EditProductState extends State<EditProduct> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           IconButton(
-            onPressed: () {},
+            onPressed: () => chooseImage(index, ImageSource.camera),
             icon: Icon(Icons.add_a_photo),
           ),
           Container(
             padding: EdgeInsets.symmetric(vertical: 8),
             width: constraints.maxWidth * 0.5,
-            child: CachedNetworkImage(
-              imageUrl:
-                  '${MyConstant.domain}/shops/img/products/${pathImages[index]}',
-              placeholder: (context, url) => ShowProgress(),
-            ),
+            child: files[index] == null
+                ? CachedNetworkImage(
+                    imageUrl:
+                        '${MyConstant.domain}/shops/img/products/${pathImages[index]}',
+                    placeholder: (context, url) => ShowProgress(),
+                  )
+                : Image.file(files[index]!),
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: () => chooseImage(index, ImageSource.gallery),
             icon: Icon(Icons.add_photo_alternate),
           ),
         ],
@@ -227,12 +252,45 @@ class _EditProductState extends State<EditProduct> {
     );
   }
 
-  processEdit() {
+  Future<Null> processEdit() async {
     if (formKey.currentState!.validate()) {
+      MyDialog().showProgressDialog(context);
+
       String name = nameController.text;
       String price = priceController.text;
       String detail = detailController.text;
-      print('## name = $name, price = $price, detail = $detail');
+      String id = productModel!.id;
+      String images;
+
+      if (statusImage) {
+        // Upload Image and Refresh array pathImages
+        int index = 0;
+        for (var item in files) {
+          if (item != null) {
+            int i = Random().nextInt(1000000);
+            String nameImage = 'productEdit$i.jpg';
+            String apiUploadImage =
+                '${MyConstant.domain}/shops/saveProduct.php';
+            Map<String, dynamic> map = {};
+            map['file'] =
+                await MultipartFile.fromFile(item.path, filename: nameImage);
+            FormData formData = FormData.fromMap(map);
+            await Dio().post(apiUploadImage, data: formData).then((value) {
+              pathImages[index] = '$nameImage';
+            });
+          }
+          index++;
+        }
+        images = pathImages.toString();
+        Navigator.pop(context);
+      } else {
+        images = pathImages.toString();
+        Navigator.pop(context);
+      }
+
+      print('## StatusImage = $statusImage');
+      print('## id = $id, name = $name, price = $price, detail = $detail');
+      print('## images = $images');
     }
   }
 }
