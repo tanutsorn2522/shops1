@@ -9,6 +9,7 @@ import 'package:shops/body/show_order_seller.dart';
 import 'package:shops/body/show_product_seller.dart';
 import 'package:shops/models/user_model.dart';
 import 'package:shops/utility/my_constant.dart';
+import 'package:shops/widgets/show_progress.dart';
 import 'package:shops/widgets/show_signout.dart';
 import 'package:shops/widgets/show_title.dart';
 
@@ -20,11 +21,7 @@ class SellerService extends StatefulWidget {
 }
 
 class _SellerServiceState extends State<SellerService> {
-  List<Widget> widgets = [
-    ShowOrderSeller(),
-    ShowManageSeller(),
-    ShowProductSeller(),
-  ];
+  List<Widget> widgets = [];
   int indexWidget = 0;
   UserModel? userModel;
 
@@ -47,6 +44,15 @@ class _SellerServiceState extends State<SellerService> {
         setState(() {
           userModel = UserModel.fromMap(item);
           print('## Name Logined = ${userModel!.name}');
+          widgets.add(
+            ShowOrderSeller(),
+          );
+          widgets.add(
+            ShowManageSeller(userModel: userModel!),
+          );
+          widgets.add(
+            ShowProductSeller(),
+          );
         });
       }
     });
@@ -58,49 +64,52 @@ class _SellerServiceState extends State<SellerService> {
       appBar: AppBar(
         title: Text('Seller'),
       ),
-      drawer: Drawer(
-        child: Stack(
-          children: [
-            showSignOut(),
-            Column(
-              children: [
-                buildHead(),
-                menuShowOrder(),
-                menuShowManage(),
-                menuShowProduct(),
-              ],
+      drawer: widgets.length == 0
+          ? SizedBox()
+          : Drawer(
+              child: Stack(
+                children: [
+                  showSignOut(),
+                  Column(
+                    children: [
+                      buildHead(),
+                      menuShowOrder(),
+                      menuShowManage(),
+                      menuShowProduct(),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
-      ),
-      body: widgets[indexWidget],
+      body: widgets.length == 0 ? ShowProgress() : widgets[indexWidget],
     );
   }
 
   UserAccountsDrawerHeader buildHead() {
     return UserAccountsDrawerHeader(
-        otherAccountsPictures: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.shop_two),
-            iconSize: 32,
-            color: MyConstant.light,
-            tooltip: 'Edit Shop',
-          )
-        ],
-        decoration: BoxDecoration(
-          gradient: RadialGradient(
-            colors: [MyConstant.light, MyConstant.dark],
-            center: Alignment(-0.8, -0.2),
-            radius: 1,
-          ),
+      otherAccountsPictures: [
+        IconButton(
+          onPressed: () {},
+          icon: Icon(Icons.home_work_sharp),
+          iconSize: 32,
+          color: MyConstant.light,
+          tooltip: 'Edit Shop',
         ),
-        currentAccountPicture: CircleAvatar(
-          backgroundImage: NetworkImage(
-              '${MyConstant.domain}/shops/img/avatar/${userModel!.avatar}'),
+      ],
+      decoration: BoxDecoration(
+        gradient: RadialGradient(
+          colors: [MyConstant.light, MyConstant.dark],
+          center: Alignment(-0.8, -0.2),
+          radius: 1,
         ),
-        accountName: Text(userModel == null ? 'name' : userModel!.name),
-        accountEmail: Text(userModel == null ? 'Type ?' : userModel!.type));
+      ),
+      currentAccountPicture: CircleAvatar(
+        backgroundImage: NetworkImage(
+            '${MyConstant.domain}/shops/img/avatar/${userModel!.avatar}'),
+      ),
+      accountName: Text(userModel == null ? 'name ?' : userModel!.name),
+      accountEmail: Text(userModel == null ? 'Type ?' : userModel!.type),
+    );
   }
 
   ListTile menuShowOrder() {
