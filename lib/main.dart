@@ -4,6 +4,7 @@ import 'package:shops/states/add_product.dart';
 import 'package:shops/states/authen.dart';
 import 'package:shops/states/buyer_service.dart';
 import 'package:shops/states/create.account.dart';
+import 'package:shops/states/edit_profile_seller.dart';
 import 'package:shops/states/rider_service.dart';
 import 'package:shops/states/seller_service.dart';
 import 'package:shops/utility/my_constant.dart';
@@ -15,6 +16,7 @@ final Map<String, WidgetBuilder> map = {
   '/sellerService': (BuildContext context) => SellerService(),
   '/riderService': (BuildContext context) => RiderService(),
   '/addProduct': (BuildContext context) => AddProduct(),
+  '/editProficeSeller': (BuildContext context) => EditProfileSeller(),
 };
 
 String? initlalRoute;
