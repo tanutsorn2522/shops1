@@ -13,6 +13,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shops/models/user_model.dart';
 import 'package:shops/utility/my_constant.dart';
+import 'package:shops/utility/my_dialog.dart';
 import 'package:shops/widgets/show_image.dart';
 import 'package:shops/widgets/show_progress.dart';
 import 'package:shops/widgets/show_title.dart';
@@ -119,6 +120,8 @@ class _EditProfileSellerState extends State<EditProfileSeller> {
   }
 
   Future<Null> processEditProfileSeller() async {
+    MyDialog().showProgressDialog(context);
+
     if (formKey.currentState!.validate()) {
       if (file == null) {
         // Use Curret Avatar
