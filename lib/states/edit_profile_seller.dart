@@ -25,6 +25,7 @@ class _EditProfileSellerState extends State<EditProfileSeller> {
   TextEditingController addressController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   LatLng? latLng;
+  final formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -38,7 +39,7 @@ class _EditProfileSellerState extends State<EditProfileSeller> {
     Position? position = await findPosition();
     if (position != null) {
       setState(() {
-        latLng = position as LatLng?;
+        latLng = LatLng(position.latitude, position.longitude);
       });
     }
   }
@@ -77,22 +78,50 @@ class _EditProfileSellerState extends State<EditProfileSeller> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Edit Profile Seller'),
+        actions: [
+          IconButton(
+            onPressed: () => processEditProfileSeller(),
+            icon: Icon(Icons.edit),
+            tooltip: 'Edit Profile Seller',
+          ),
+        ],
       ),
       body: LayoutBuilder(
-        builder: (context, constraints) => ListView(
-          padding: EdgeInsets.all(16),
-          children: [
-            buildTitle('General :'),
-            buildName(constraints),
-            buildAddress(constraints),
-            buildPhone(constraints),
-            buildTitle('Avatar :'),
-            buildAvatar(constraints),
-            buildTitle('Location :'),
-            buildMap(constraints),
-          ],
+        builder: (context, constraints) => GestureDetector(
+          onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+          behavior: HitTestBehavior.opaque,
+          child: Form(
+            key: formKey,
+            child: ListView(
+              padding: EdgeInsets.all(16),
+              children: [
+                buildTitle('General :'),
+                buildName(constraints),
+                buildAddress(constraints),
+                buildPhone(constraints),
+                buildTitle('Avatar :'),
+                buildAvatar(constraints),
+                buildTitle('Location :'),
+                buildMap(constraints),
+                buildButtonEditProfile(),
+              ],
+            ),
+          ),
         ),
       ),
+    );
+  }
+
+  Future<Null> processEditProfileSeller() async {
+    print('processEditProfileSeller');
+    if (formKey.currentState!.validate()) {}
+  }
+
+  ElevatedButton buildButtonEditProfile() {
+    return ElevatedButton.icon(
+      onPressed: () => processEditProfileSeller(),
+      icon: Icon(Icons.edit),
+      label: Text('Edit Profile Seller'),
     );
   }
 
@@ -109,7 +138,23 @@ class _EditProfileSellerState extends State<EditProfileSeller> {
           height: constraints.maxWidth * 0.5,
           child: latLng == null
               ? ShowProgress()
-              : Text('lat = ${latLng!.latitude}'),
+              : GoogleMap(
+                  initialCameraPosition: CameraPosition(
+                    target: latLng!,
+                    zoom: 16,
+                  ),
+                  onMapCreated: (controller) {},
+                  markers: <Marker>[
+                    Marker(
+                      markerId: MarkerId('id'),
+                      position: latLng!,
+                      infoWindow: InfoWindow(
+                          title: 'คุณอยู่ที่นี่',
+                          snippet:
+                              'lat = ${latLng!.latitude}, lng = ${latLng!.longitude}'),
+                    ),
+                  ].toSet(),
+                ),
         ),
       ],
     );
@@ -169,6 +214,13 @@ class _EditProfileSellerState extends State<EditProfileSeller> {
           margin: EdgeInsets.only(top: 16),
           width: constraints.maxWidth * 0.6,
           child: TextFormField(
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'Please Fill Name';
+              } else {
+                return null;
+              }
+            },
             controller: nameController,
             decoration: InputDecoration(
               labelText: 'Name :',
@@ -188,6 +240,13 @@ class _EditProfileSellerState extends State<EditProfileSeller> {
           margin: EdgeInsets.only(top: 16),
           width: constraints.maxWidth * 0.6,
           child: TextFormField(
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'Please Fill Address';
+              } else {
+                return null;
+              }
+            },
             maxLines: 3,
             controller: addressController,
             decoration: InputDecoration(
@@ -208,6 +267,14 @@ class _EditProfileSellerState extends State<EditProfileSeller> {
           margin: EdgeInsets.symmetric(vertical: 16),
           width: constraints.maxWidth * 0.6,
           child: TextFormField(
+            keyboardType: TextInputType.phone,
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'Please Fill Phone';
+              } else {
+                return null;
+              }
+            },
             controller: phoneController,
             decoration: InputDecoration(
               labelText: 'Phone :',
