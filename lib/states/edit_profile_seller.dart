@@ -1,10 +1,13 @@
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shops/models/user_model.dart';
 import 'package:shops/utility/my_constant.dart';
+import 'package:shops/widgets/show_image.dart';
+import 'package:shops/widgets/show_progress.dart';
 import 'package:shops/widgets/show_title.dart';
 
 class EditProfileSeller extends StatefulWidget {
@@ -60,9 +63,73 @@ class _EditProfileSellerState extends State<EditProfileSeller> {
             buildName(constraints),
             buildAddress(constraints),
             buildPhone(constraints),
+            buildTitle('Avatar :'),
+            buildAvatar(constraints),
+            buildTitle('Location :'),
+            buildMap(constraints),
           ],
         ),
       ),
+    );
+  }
+
+  Row buildMap(BoxConstraints constraints) {
+    return Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 16),
+                color: Colors.grey,
+                width: constraints.maxWidth * 0.75,
+                height: constraints.maxWidth * 0.5,
+              ),
+            ],
+          );
+  }
+
+  Row buildAvatar(BoxConstraints constraints) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          margin: EdgeInsets.symmetric(vertical: 16),
+          decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
+          child: Row(
+            children: [
+              IconButton(
+                onPressed: () {},
+                icon: Icon(
+                  Icons.add_a_photo,
+                  color: Colors.lightBlue,
+                ),
+              ),
+              Container(
+                width: constraints.maxWidth * 0.6,
+                height: constraints.maxWidth * 0.6,
+                child: userModel == null
+                    ? ShowProgress()
+                    : Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: userModel!.avatar == null
+                            ? ShowImage(path: MyConstant.avatar)
+                            : CachedNetworkImage(
+                                imageUrl:
+                                    '${MyConstant.domain}/shops/img/avatar/${userModel!.avatar}',
+                                placeholder: (context, url) => ShowProgress(),
+                              ),
+                      ),
+              ),
+              IconButton(
+                onPressed: () {},
+                icon: Icon(
+                  Icons.add_photo_alternate,
+                  color: Colors.lightBlue,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -110,7 +177,7 @@ class _EditProfileSellerState extends State<EditProfileSeller> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          margin: EdgeInsets.only(top: 16),
+          margin: EdgeInsets.symmetric(vertical: 16),
           width: constraints.maxWidth * 0.6,
           child: TextFormField(
             controller: phoneController,
