@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shops/models/user_model.dart';
 import 'package:shops/utility/my_constant.dart';
@@ -22,12 +24,33 @@ class _EditProfileSellerState extends State<EditProfileSeller> {
   TextEditingController nameController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
+  LatLng? latLng;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     findUser();
+    findLatLng();
+  }
+
+  Future<Null> findLatLng() async {
+    Position? position = await findPosition();
+    if (position != null) {
+      setState(() {
+        latLng = position as LatLng?;
+      });
+    }
+  }
+
+  Future<Position?> findPosition() async {
+    Position? position;
+    try {
+      position = await Geolocator.getCurrentPosition();
+    } catch (e) {
+      position = null;
+    }
+    return position;
   }
 
   Future<Null> findUser() async {
@@ -75,16 +98,21 @@ class _EditProfileSellerState extends State<EditProfileSeller> {
 
   Row buildMap(BoxConstraints constraints) {
     return Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                margin: EdgeInsets.symmetric(vertical: 16),
-                color: Colors.grey,
-                width: constraints.maxWidth * 0.75,
-                height: constraints.maxWidth * 0.5,
-              ),
-            ],
-          );
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey),
+          ),
+          margin: EdgeInsets.symmetric(vertical: 16),
+          width: constraints.maxWidth * 0.75,
+          height: constraints.maxWidth * 0.5,
+          child: latLng == null
+              ? ShowProgress()
+              : Text('lat = ${latLng!.latitude}'),
+        ),
+      ],
+    );
   }
 
   Row buildAvatar(BoxConstraints constraints) {
