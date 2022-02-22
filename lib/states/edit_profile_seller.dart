@@ -1,10 +1,15 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:convert';
+import 'dart:io';
+import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shops/models/user_model.dart';
 import 'package:shops/utility/my_constant.dart';
@@ -26,6 +31,7 @@ class _EditProfileSellerState extends State<EditProfileSeller> {
   TextEditingController phoneController = TextEditingController();
   LatLng? latLng;
   final formKey = GlobalKey<FormState>();
+  File? file;
 
   @override
   void initState() {
@@ -113,8 +119,34 @@ class _EditProfileSellerState extends State<EditProfileSeller> {
   }
 
   Future<Null> processEditProfileSeller() async {
-    print('processEditProfileSeller');
-    if (formKey.currentState!.validate()) {}
+    if (formKey.currentState!.validate()) {
+      if (file == null) {
+        // Use Curret Avatar
+        editValueToMySQL(userModel!.avatar);
+      } else {
+        // Use New Avatar
+        String oldImages = '${userModel!.avatar}';
+        String apiSaveAvatar =
+            '${MyConstant.domain}/shops/saveAvatar.php?oldImages=$oldImages';
+
+        String nameFile = 'edit${Random().nextInt(100)}${userModel!.avatar}';
+        Map<String, dynamic> map = {};
+        map['file'] =
+            await MultipartFile.fromFile(file!.path, filename: nameFile);
+        FormData formData = FormData.fromMap(map);
+        await Dio().post(apiSaveAvatar, data: formData).then((value) {
+          print('Upload Success');
+          String pathAvatar = '$nameFile';
+          editValueToMySQL(pathAvatar);
+        });
+      }
+    }
+  }
+
+  Future<Null> editValueToMySQL(String pathAvatar) async {
+    String apiEditProfile =
+        '${MyConstant.domain}/shops/editProfileSellerWhereId.php?isAdd=true&id=${userModel!.id}&name=${nameController.text}&address=${addressController.text}&phone=${phoneController.text}&avatar=$pathAvatar&lat=${latLng!.latitude}&lng=${latLng!.longitude}';
+    await Dio().get(apiEditProfile).then((value) => Navigator.pop(context));
   }
 
   ElevatedButton buildButtonEditProfile() {
@@ -160,6 +192,19 @@ class _EditProfileSellerState extends State<EditProfileSeller> {
     );
   }
 
+  Future<Null> createAvatar({ImageSource? source}) async {
+    try {
+      var result = await ImagePicker().getImage(
+        source: source!,
+        maxWidth: 800,
+        maxHeight: 800,
+      );
+      setState(() {
+        file = File(result!.path);
+      });
+    } catch (e) {}
+  }
+
   Row buildAvatar(BoxConstraints constraints) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -170,7 +215,7 @@ class _EditProfileSellerState extends State<EditProfileSeller> {
           child: Row(
             children: [
               IconButton(
-                onPressed: () {},
+                onPressed: () => createAvatar(source: ImageSource.camera),
                 icon: Icon(
                   Icons.add_a_photo,
                   color: Colors.lightBlue,
@@ -185,15 +230,13 @@ class _EditProfileSellerState extends State<EditProfileSeller> {
                         padding: const EdgeInsets.all(8.0),
                         child: userModel!.avatar == null
                             ? ShowImage(path: MyConstant.avatar)
-                            : CachedNetworkImage(
-                                imageUrl:
-                                    '${MyConstant.domain}/shops/img/avatar/${userModel!.avatar}',
-                                placeholder: (context, url) => ShowProgress(),
-                              ),
+                            : file == null
+                                ? buildShowImageNetwork()
+                                : Image.file(file!),
                       ),
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: () => createAvatar(source: ImageSource.gallery),
                 icon: Icon(
                   Icons.add_photo_alternate,
                   color: Colors.lightBlue,
@@ -203,6 +246,13 @@ class _EditProfileSellerState extends State<EditProfileSeller> {
           ),
         ),
       ],
+    );
+  }
+
+  CachedNetworkImage buildShowImageNetwork() {
+    return CachedNetworkImage(
+      imageUrl: '${MyConstant.domain}/shops/img/avatar/${userModel!.avatar}',
+      placeholder: (context, url) => ShowProgress(),
     );
   }
 
