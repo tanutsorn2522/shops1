@@ -68,7 +68,6 @@ class _EditProfileSellerState extends State<EditProfileSeller> {
     String apiGetUser =
         '${MyConstant.domain}/shops/getUserWhereUser.php?isAdd=true&user=$user';
     await Dio().get(apiGetUser).then((value) {
-      print('## value from API ==>> $value');
       for (var item in json.decode(value.data)) {
         setState(() {
           userModel = UserModel.fromMap(item);
