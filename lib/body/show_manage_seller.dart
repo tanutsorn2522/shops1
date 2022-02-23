@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shops/models/user_model.dart';
@@ -24,6 +27,19 @@ class _ShowManageSellerState extends State<ShowManageSeller> {
     userModel = widget.userModel;
   }
 
+  Future<Null> refreshUserModel() async {
+    print('## refreshUserModel Work');
+    String apiGetUserWhereId =
+        '${MyConstant.domain}/shops/getUserWhereId.php?isAdd=true&id=${userModel!.id}';
+    await Dio().get(apiGetUserWhereId).then((value) {
+      for (var item in json.decode(value.data)) {
+        setState(() {
+          userModel = UserModel.fromMap(item);
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +47,8 @@ class _ShowManageSellerState extends State<ShowManageSeller> {
         backgroundColor: MyConstant.primary,
         child: Icon(Icons.edit),
         onPressed: () =>
-            Navigator.pushNamed(context, MyConstant.routeEditProfileSeller),
+            Navigator.pushNamed(context, MyConstant.routeEditProfileSeller)
+                .then((value) => refreshUserModel()),
       ),
       body: LayoutBuilder(
         builder: (context, constraints) => Padding(

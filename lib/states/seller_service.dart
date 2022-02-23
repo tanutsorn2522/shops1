@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
@@ -35,24 +34,15 @@ class _SellerServiceState extends State<SellerService> {
   Future<Null> findUserModel() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String id = preferences.getString('id')!;
-    print('## id logined ==>> $id');
     String apiGetUserWhereId =
         '${MyConstant.domain}/shops/getUserWhereId.php?isAdd=true&id=$id';
     await Dio().get(apiGetUserWhereId).then((value) {
-      print('## value ==>> $value');
       for (var item in json.decode(value.data)) {
         setState(() {
           userModel = UserModel.fromMap(item);
-          print('## Name Logined = ${userModel!.name}');
-          widgets.add(
-            ShowOrderSeller(),
-          );
-          widgets.add(
-            ShowManageSeller(userModel: userModel!),
-          );
-          widgets.add(
-            ShowProductSeller(),
-          );
+          widgets.add(ShowOrderSeller());
+          widgets.add(ShowManageSeller(userModel: userModel!));
+          widgets.add(ShowProductSeller());
         });
       }
     });
