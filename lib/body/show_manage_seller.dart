@@ -28,7 +28,6 @@ class _ShowManageSellerState extends State<ShowManageSeller> {
   }
 
   Future<Null> refreshUserModel() async {
-    print('## refreshUserModel Work');
     String apiGetUserWhereId =
         '${MyConstant.domain}/shops/getUserWhereId.php?isAdd=true&id=${userModel!.id}';
     await Dio().get(apiGetUserWhereId).then((value) {
