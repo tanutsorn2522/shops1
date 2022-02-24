@@ -29,6 +29,7 @@ class MyConstant {
   static String imageicon = 'images/image_icon.png';
   static String imageicon1 = 'images/image_icon1.png';
   static String imageicon2 = 'images/image_icon2.png';
+  static String motocycle = 'images/171251.png';
 
   // Color
   static Color primary = Color(0xffdd0000);
@@ -62,6 +63,18 @@ class MyConstant {
   TextStyle h2WhiteStyle() => TextStyle(
         fontSize: 18,
         color: Colors.white,
+        fontWeight: FontWeight.w700,
+      );
+
+  TextStyle h2OrangeStyle() => TextStyle(
+        fontSize: 18,
+        color: Colors.orange,
+        fontWeight: FontWeight.w700,
+      );
+
+  TextStyle h2BlueStyle() => TextStyle(
+        fontSize: 18,
+        color: Colors.blue.shade800,
         fontWeight: FontWeight.w700,
       );
 

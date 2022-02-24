@@ -26,6 +26,7 @@ class _BuyerServiceState extends State<BuyerService> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Buyer'),
+        centerTitle: true,
       ),
       drawer: Drawer(
         child: Stack(
