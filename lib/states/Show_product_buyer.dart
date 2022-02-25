@@ -3,10 +3,12 @@ import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:shops/models/product_model.dart';
+import 'package:shops/models/sqlite_model.dart';
 import 'package:shops/models/user_model.dart';
 import 'package:shops/utility/my_constant.dart';
+import 'package:shops/utility/my_dialog.dart';
+import 'package:shops/utility/sqlite_helper.dart';
 import 'package:shops/widgets/show_image.dart';
 import 'package:shops/widgets/show_progress.dart';
 import 'package:shops/widgets/show_title.dart';
@@ -27,6 +29,7 @@ class _ShowProductBuyerState extends State<ShowProductBuyer> {
   List<List<String>> listImages = [];
   int indexImage = 0;
   int amountInt = 1;
+  String? currentIdSeller;
 
   @override
   void initState() {
@@ -34,6 +37,20 @@ class _ShowProductBuyerState extends State<ShowProductBuyer> {
     super.initState();
     userModel = widget.userModel;
     readAPI();
+    readCard();
+  }
+
+  Future<Null> readCard() async {
+    await SQLiteHelper().readSQLite().then((value) {
+      if (value.length != 0) {
+        List<SQLiteModel> models = [];
+        for (var model in value) {
+          models.add(model);
+        }
+        currentIdSeller = models[0].idSeller;
+        //print('### currentIdSeller ==>> $currentIdSeller');
+      }
+    });
   }
 
   Future<void> readAPI() async {
@@ -301,7 +318,36 @@ class _ShowProductBuyerState extends State<ShowProductBuyer> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 TextButton(
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () async {
+                    String idSeller = userModel!.id;
+                    String idProduct = productModel.id;
+                    String name = productModel.name;
+                    String price = productModel.price;
+                    String amount = amountInt.toString();
+                    int sumInt = int.parse(price) * amountInt;
+                    String sum = sumInt.toString();
+                    if ((currentIdSeller == idSeller) ||
+                        (currentIdSeller == null)) {
+                      SQLiteModel sqLiteModel = SQLiteModel(
+                          idSeller: idSeller,
+                          idProduct: idProduct,
+                          name: name,
+                          price: price,
+                          amount: amount,
+                          sum: sum);
+                      await SQLiteHelper()
+                          .insertValueToSQLite(sqLiteModel)
+                          .then((value) {
+                        amountInt = 1;
+                        Navigator.pop(context);
+                      });
+                    } else {
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                      MyDialog().normalDialog(context, 'ร้านผิด ?',
+                          'กรุณาเลือกสินค้าที่ ร้านเดิม ให้เสร็จก่อน เลือกร้านอื่น');
+                    }
+                  },
                   child: Text(
                     'เพิ่มลงรถเข็น',
                     style: MyConstant().h2BlueStyle(),

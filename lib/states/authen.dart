@@ -78,7 +78,7 @@ class _AuthenState extends State<Authen> {
               if (formKey.currentState!.validate()) {
                 String user = userController.text;
                 String password = passwordController.text;
-                print('## user = $user, password = $password');
+                //print('## user = $user, password = $password');
                 checkAuthen(user: user, password: password);
               }
             },
@@ -96,7 +96,7 @@ class _AuthenState extends State<Authen> {
     String apiCheckAuthen =
         '${MyConstant.domain}/shops/getUserWhereUser.php?isAdd=true&user=$user&password';
     await Dio().get(apiCheckAuthen).then((value) async {
-      print('## value for API ==>> $value');
+      //print('## value for API ==>> $value');
       if (value.toString() == 'null') {
         MyDialog().normalDialog(
             context, 'ชื่อผู้ใช้ไม่ถูกต้อง', 'ไม่พบชื่อผู้ใช้ $user ในระบบ');
@@ -106,7 +106,7 @@ class _AuthenState extends State<Authen> {
           if (password == model.password) {
             // Success Athen
             String type = model.type;
-            print('## Authen Success in Type ==>> $type');
+            //print('## Authen Success in Type ==>> $type');
 
             SharedPreferences preferences =
                 await SharedPreferences.getInstance();

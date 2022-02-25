@@ -7,6 +7,7 @@ import 'package:shops/states/create.account.dart';
 import 'package:shops/states/edit_profile_seller.dart';
 import 'package:shops/states/rider_service.dart';
 import 'package:shops/states/seller_service.dart';
+import 'package:shops/states/show_cart.dart';
 import 'package:shops/utility/my_constant.dart';
 
 final Map<String, WidgetBuilder> map = {
@@ -17,6 +18,7 @@ final Map<String, WidgetBuilder> map = {
   '/riderService': (BuildContext context) => RiderService(),
   '/addProduct': (BuildContext context) => AddProduct(),
   '/editProficeSeller': (BuildContext context) => EditProfileSeller(),
+  '/showCart': (BuildContext context) => ShowCart(),
 };
 
 String? initlalRoute;
@@ -25,7 +27,7 @@ Future<Null> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences preferences = await SharedPreferences.getInstance();
   String? type = preferences.getString('type');
-  print('### type ==>> $type');
+  //print('### type ==>> $type');
   if (type?.isEmpty ?? true) {
     initlalRoute = MyConstant.routeAuthen;
     runApp(MyApp());

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shops/body/my_money_buyer.dart';
 import 'package:shops/body/my_order_buyer.dart';
 import 'package:shops/body/show_all_product_buyer.dart';
+import 'package:shops/states/show_cart.dart';
 import 'package:shops/utility/my_constant.dart';
 import 'package:shops/widgets/show_signout.dart';
 import 'package:shops/widgets/show_title.dart';
@@ -27,6 +28,13 @@ class _BuyerServiceState extends State<BuyerService> {
       appBar: AppBar(
         title: Text('Buyer'),
         centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () =>
+                Navigator.pushNamed(context, MyConstant.routeShowCart),
+            icon: Icon(Icons.shopping_cart_outlined),
+          ),
+        ],
       ),
       drawer: Drawer(
         child: Stack(
