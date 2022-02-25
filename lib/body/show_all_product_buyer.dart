@@ -94,8 +94,8 @@ class _ShowAllProductBuyerState extends State<ShowAllProductBuyer> {
 
   String cutWord(String name) {
     String result = name;
-    if (result.length > 19) {
-      result = result.substring(0, 15);
+    if (result.length > 14) {
+      result = result.substring(0, 10);
       result = '$result ...';
     }
     return result;
