@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -34,6 +35,7 @@ class _AuthenState extends State<Authen> {
             child: Form(
               key: formKey,
               child: ListView(
+                shrinkWrap: true,
                 children: [
                   buildImage(size),
                   //buildAppName(),
@@ -79,9 +81,10 @@ class _AuthenState extends State<Authen> {
             onPressed: () {
               if (formKey.currentState!.validate()) {
                 String user = userController.text;
-                String password = passwordController.text;
-                //print('## user = $user, password = $password');
-                checkAuthen(user: user, password: password);
+                String pass = passwordController.text;
+                var bytes = utf8.encode(pass);
+                var password = md5.convert(bytes);
+                checkAuthen(user: user, password: password.toString());
               }
             },
             child: Text(
