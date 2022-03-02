@@ -45,6 +45,16 @@ class _AddProductState extends State<AddProduct> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Colors.cyan,
+                Colors.indigo,
+              ],
+            ),
+          ),
+        ),
         actions: [
           IconButton(
               onPressed: () => processAddProduct(),

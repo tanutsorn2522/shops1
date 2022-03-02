@@ -11,28 +11,35 @@ class showSignOut extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        ListTile(
-          onTap: () async {
-            SharedPreferences preferences =
-                await SharedPreferences.getInstance();
-            preferences.clear().then(
-                  (value) => Navigator.pushNamedAndRemoveUntil(
-                      context, MyConstant.routeAuthen, (route) => false),
-                );
-          },
-          tileColor: Colors.red.shade400,
-          leading: Icon(
-            Icons.exit_to_app,
-            size: 36,
-            color: Colors.white,
+        Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.cyan, Colors.indigo],
+            ),
           ),
-          title: ShowTitle(
-            title: 'Sign Out',
-            textStyle: MyConstant().h2WhiteStyle(),
-          ),
-          subtitle: ShowTitle(
-            title: 'Sign Out And Go to Authen',
-            textStyle: MyConstant().h3WhiteStyle(),
+          child: ListTile(
+            onTap: () async {
+              SharedPreferences preferences =
+                  await SharedPreferences.getInstance();
+              preferences.clear().then(
+                    (value) => Navigator.pushNamedAndRemoveUntil(
+                        context, MyConstant.routeAuthen, (route) => false),
+                  );
+            },
+            tileColor: Colors.red.shade400,
+            leading: Icon(
+              Icons.exit_to_app,
+              size: 36,
+              color: Colors.white,
+            ),
+            title: ShowTitle(
+              title: 'Sign Out',
+              textStyle: MyConstant().h2WhiteStyle(),
+            ),
+            subtitle: ShowTitle(
+              title: 'Sign Out And Go to Authen',
+              textStyle: MyConstant().h3WhiteStyle(),
+            ),
           ),
         ),
       ],

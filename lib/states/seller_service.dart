@@ -53,6 +53,16 @@ class _SellerServiceState extends State<SellerService> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Seller'),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Colors.cyan,
+                Colors.indigo,
+              ],
+            ),
+          ),
+        ),
       ),
       drawer: widgets.length == 0
           ? SizedBox()
@@ -82,13 +92,16 @@ class _SellerServiceState extends State<SellerService> {
           onPressed: () {},
           icon: Icon(Icons.home_work_sharp),
           iconSize: 32,
-          color: MyConstant.light,
+          color: Colors.white70,
           tooltip: 'Edit Shop',
         ),
       ],
       decoration: BoxDecoration(
         gradient: RadialGradient(
-          colors: [MyConstant.light, MyConstant.dark],
+          colors: [
+            Colors.cyan,
+            Colors.indigo,
+          ],
           center: Alignment(-0.8, -0.2),
           radius: 1,
         ),

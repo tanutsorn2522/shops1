@@ -83,6 +83,16 @@ class _EditProfileSellerState extends State<EditProfileSeller> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Colors.cyan,
+                Colors.indigo,
+              ],
+            ),
+          ),
+        ),
         title: Text('Edit Profile Seller'),
         actions: [
           IconButton(

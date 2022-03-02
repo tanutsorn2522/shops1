@@ -74,6 +74,16 @@ class _ShowCartState extends State<ShowCart> {
       appBar: AppBar(
         title: Text('Show Cart'),
         centerTitle: true,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Colors.cyan,
+                Colors.indigo,
+              ],
+            ),
+          ),
+        ),
       ),
       body: load
           ? ShowProgress()
@@ -264,7 +274,15 @@ class _ShowCartState extends State<ShowCart> {
 
   Container buildHead() {
     return Container(
-      decoration: BoxDecoration(color: MyConstant.light),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Colors.cyan,
+            Colors.lightBlue.shade100,
+            Colors.cyan,
+          ],
+        ),
+      ),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 4),
         child: Row(

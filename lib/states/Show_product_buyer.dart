@@ -95,6 +95,16 @@ class _ShowProductBuyerState extends State<ShowProductBuyer> {
       appBar: AppBar(
         title: Text(userModel!.name),
         centerTitle: true,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Colors.cyan,
+                Colors.indigo,
+              ],
+            ),
+          ),
+        ),
       ),
       body: load
           ? ShowProgress()

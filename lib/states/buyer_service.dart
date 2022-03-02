@@ -28,6 +28,16 @@ class _BuyerServiceState extends State<BuyerService> {
       appBar: AppBar(
         title: Text('Buyer'),
         centerTitle: true,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Colors.cyan,
+                Colors.indigo,
+              ],
+            ),
+          ),
+        ),
         actions: [
           IconButton(
             onPressed: () =>
@@ -127,6 +137,16 @@ class _BuyerServiceState extends State<BuyerService> {
     );
   }
 
-  UserAccountsDrawerHeader buildHeader() =>
-      UserAccountsDrawerHeader(accountName: null, accountEmail: null);
+  UserAccountsDrawerHeader buildHeader() => UserAccountsDrawerHeader(
+        accountName: null,
+        accountEmail: null,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Colors.cyan,
+              Colors.indigo,
+            ],
+          ),
+        ),
+      );
 }

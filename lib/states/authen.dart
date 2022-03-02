@@ -28,22 +28,35 @@ class _AuthenState extends State<Authen> {
     double size = MediaQuery.of(context).size.width;
     return Scaffold(
       body: SafeArea(
-        child: GestureDetector(
-          onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
-          behavior: HitTestBehavior.opaque,
-          child: SingleChildScrollView(
-            child: Form(
-              key: formKey,
-              child: ListView(
-                shrinkWrap: true,
-                children: [
-                  buildImage(size),
-                  //buildAppName(),
-                  buildUser(size),
-                  buildPassword(size),
-                  buildLogin(size),
-                  buildCreateAccount(),
-                ],
+        child: Container(
+          height: MediaQuery.of(context).size.height * 1,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Colors.cyan.shade500,
+                Colors.indigo,
+              ],
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+            ),
+          ),
+          child: GestureDetector(
+            onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+            behavior: HitTestBehavior.opaque,
+            child: SingleChildScrollView(
+              child: Form(
+                key: formKey,
+                child: ListView(
+                  shrinkWrap: true,
+                  children: [
+                    buildImage(size),
+                    //buildAppName(),
+                    buildUser(size),
+                    buildPassword(size),
+                    buildLogin(size),
+                    buildCreateAccount(),
+                  ],
+                ),
               ),
             ),
           ),
@@ -58,12 +71,15 @@ class _AuthenState extends State<Authen> {
       children: [
         ShowTitle(
           title: 'ไม่มีบัญชี ?',
-          textStyle: MyConstant().h3Style(),
+          textStyle: MyConstant().h3WhiteStyle(),
         ),
         TextButton(
           onPressed: () =>
               Navigator.pushNamed(context, MyConstant.routeCreateAccount),
-          child: Text('สร้างบัญชีใหม่'),
+          child: Text(
+            'สร้างบัญชีใหม่',
+            style: MyConstant().h3WhiteStyle(),
+          ),
         ),
       ],
     );
@@ -162,6 +178,8 @@ class _AuthenState extends State<Authen> {
               }
             },
             decoration: InputDecoration(
+              fillColor: Colors.white70,
+              filled: true,
               labelStyle: MyConstant().h3Style(),
               labelText: 'ชื่อผู้ใช้',
               prefixIcon: Icon(
@@ -169,16 +187,25 @@ class _AuthenState extends State<Authen> {
                 color: MyConstant.dark,
               ),
               enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: MyConstant.dark),
-                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(
+                  color: Colors.blue.shade400,
+                  width: 5,
+                ),
+                borderRadius: BorderRadius.circular(30),
               ),
               focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: MyConstant.light),
-                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(
+                  color: Colors.blue.shade700,
+                  width: 5,
+                ),
+                borderRadius: BorderRadius.circular(30),
               ),
               errorBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.red),
-                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(
+                  color: Colors.blue.shade900,
+                  width: 5,
+                ),
+                borderRadius: BorderRadius.circular(30),
               ),
             ),
           ),
@@ -205,6 +232,8 @@ class _AuthenState extends State<Authen> {
             },
             obscureText: statusRedEye,
             decoration: InputDecoration(
+              fillColor: Colors.white70,
+              filled: true,
               suffixIcon: IconButton(
                 onPressed: () {
                   setState(() {
@@ -228,16 +257,25 @@ class _AuthenState extends State<Authen> {
                 color: MyConstant.dark,
               ),
               enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: MyConstant.dark),
-                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(
+                  color: Colors.blue.shade400,
+                  width: 5,
+                ),
+                borderRadius: BorderRadius.circular(30),
               ),
               focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: MyConstant.light),
-                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(
+                  color: Colors.blue.shade700,
+                  width: 5,
+                ),
+                borderRadius: BorderRadius.circular(30),
               ),
               errorBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.red),
-                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(
+                  color: Colors.blue.shade900,
+                  width: 5,
+                ),
+                borderRadius: BorderRadius.circular(30),
               ),
             ),
           ),
