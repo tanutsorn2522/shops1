@@ -4,6 +4,7 @@ class MyConstant {
   // Genernal
   static String appName = 'CHANYONT';
   static String domain = 'http://110.164.195.163';
+  static String urlPromptpay = 'https://promptpay.io/0973075354.png';
 
   // Route
   static String routeAuthen = '/authen';
@@ -14,6 +15,7 @@ class MyConstant {
   static String routeAddProduce = '/addProduct';
   static String routeEditProfileSeller = '/editProficeSeller';
   static String routeShowCart = '/showCart';
+  static String routeAddWallet = '/addWallet';
 
   // Image
   static String image0 = 'images/chanyontlogo.png';

@@ -162,14 +162,26 @@ class _ShowCartState extends State<ShowCart> {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         ElevatedButton(
-          onPressed: () {},
-          child: Text('สั่งสินค้า'),
+          style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(Colors.blue.shade700)),
+          onPressed: () {
+            Navigator.pushNamed(context, MyConstant.routeAddWallet);
+          },
+          child: Text(
+            'สั่งสินค้า',
+            style: MyConstant().h2WhiteStyle(),
+          ),
         ),
         Container(
           margin: EdgeInsets.only(left: 4, right: 8),
           child: ElevatedButton(
+            style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(Colors.orange)),
             onPressed: () => confirmEmptyCart(),
-            child: Text('ลบทั้งหมด'),
+            child: Text(
+              'ลบทั้งหมด',
+              style: MyConstant().h2WhiteStyle(),
+            ),
           ),
         ),
       ],
