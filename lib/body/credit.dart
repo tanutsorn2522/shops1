@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:shops/utility/my_constant.dart';
 import 'package:shops/widgets/show_title.dart';
 
@@ -10,7 +11,20 @@ class Credit extends StatefulWidget {
 }
 
 class _CreditState extends State<Credit> {
-  String? name, surname, idCard, expiryDateMouth, expiryDateYear, cvc, amount;
+  String? name,
+      surname,
+      idCard,
+      expiryDateMouth,
+      expiryDateYear,
+      cvc,
+      amount,
+      expiryDateStr;
+  MaskTextInputFormatter idCardMask =
+      MaskTextInputFormatter(mask: '#### - #### - #### - ####');
+  MaskTextInputFormatter expiryDateMask =
+      MaskTextInputFormatter(mask: '## / ####');
+  MaskTextInputFormatter cvcMask = MaskTextInputFormatter(mask: '###');
+  var formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -18,19 +32,23 @@ class _CreditState extends State<Credit> {
       body: GestureDetector(
         onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
         behavior: HitTestBehavior.opaque,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            buildTitle('ชื่อ - นามสกุล'),
-            buildNameSurname(),
-            buildTitle('หมายเลข บัตรเครดิต'),
-            formIdcard(),
-            buildExpiryCvc(),
-            buildTitle('จำนวนเงิน'),
-            formAmount(),
-            Spacer(),
-            buttonAddMoney(),
-          ],
+        child: Form(
+          key: formKey,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                buildTitle('ชื่อ - นามสกุล'),
+                buildNameSurname(),
+                buildTitle('หมายเลข บัตรเครดิต'),
+                formIdcard(),
+                buildExpiryCvc(),
+                buildTitle('จำนวนเงิน'),
+                formAmount(),
+                buttonAddMoney(),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -43,7 +61,12 @@ class _CreditState extends State<Credit> {
         width: double.infinity,
         child: ElevatedButton(
           onPressed: () {
-            print('value idCard ==>> $idCard');
+            if (formKey.currentState!.validate()) {
+              expiryDateMouth = expiryDateStr!.substring(0, 2);
+              expiryDateYear = expiryDateStr!.substring(2, 6);
+              print(
+                  'idCard ==>> $idCard, expiryDateMouth ==>> $expiryDateMouth, expiryDateYear ==>> $expiryDateYear, cvc ==>> $cvc');
+            }
           },
           child: Text('Add Money'),
         ),
@@ -104,13 +127,26 @@ class _CreditState extends State<Credit> {
   Widget formIdcard() => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30),
         child: TextFormField(
+          validator: (value) {
+            if (value!.isEmpty) {
+              return 'กรุณาใส่หมายเลขบัตรเครดิต';
+            } else {
+              if (idCard!.length != 16) {
+                return 'หมายเลขบัตร ต้องมี 16 ตัวอักษร';
+              } else {
+                return null;
+              }
+            }
+          },
+          inputFormatters: [idCardMask],
           onChanged: (value) {
-            idCard = value.trim();
+            //idCard = value.trim();
             //print('value idCard ==>> $value');
+            idCard = idCardMask.getUnmaskedText();
           },
           keyboardType: TextInputType.number,
           decoration: InputDecoration(
-            hintText: 'xxxx-xxxx-xxxx-xxxx',
+            hintText: 'xxxx - xxxx - xxxx - xxxx',
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
           ),
         ),
@@ -119,6 +155,13 @@ class _CreditState extends State<Credit> {
   Widget formAmount() => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30),
         child: TextFormField(
+          validator: (value) {
+            if (value!.isEmpty) {
+              return 'กรุณาใส่ จำนวนเงิน';
+            } else {
+              return null;
+            }
+          },
           keyboardType: TextInputType.number,
           decoration: InputDecoration(
             suffix: ShowTitle(
@@ -132,14 +175,44 @@ class _CreditState extends State<Credit> {
       );
 
   Widget formExpiryDate() => TextFormField(
+        validator: (value) {
+          if (value!.isEmpty) {
+            return 'กรุณาใส่ เดือน/ปี หมดอายุ';
+          } else {
+            if (expiryDateStr!.length != 6) {
+              return 'กรุณาใส่ให้ครบ';
+            } else {
+              return null;
+            }
+          }
+        },
+        onChanged: (value) {
+          expiryDateStr = expiryDateMask.getUnmaskedText();
+        },
+        inputFormatters: [expiryDateMask],
         keyboardType: TextInputType.number,
         decoration: InputDecoration(
-          hintText: 'DD/YYYY',
+          hintText: 'MM / YYYY',
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
         ),
       );
 
   Widget formCVC() => TextFormField(
+        validator: (value) {
+          if (value!.isEmpty) {
+            return 'กรุณาใส่หมายเลขหลังบัตร';
+          } else {
+            if (cvc!.length != 3) {
+              return 'ต้องมี 3 ตัวอักษร';
+            } else {
+              return null;
+            }
+          }
+        },
+        onChanged: (value) {
+          cvc = cvcMask.getUnmaskedText();
+        },
+        inputFormatters: [cvcMask],
         keyboardType: TextInputType.number,
         decoration: InputDecoration(
           hintText: 'xxx',
@@ -149,6 +222,13 @@ class _CreditState extends State<Credit> {
 
   Widget formName() => Expanded(
         child: TextFormField(
+          validator: (value) {
+            if (value!.isEmpty) {
+              return 'กรุณาใส่ชื่อ';
+            } else {
+              return null;
+            }
+          },
           decoration: InputDecoration(
             label: ShowTitle(
               title: 'ชื่อ',
@@ -160,6 +240,13 @@ class _CreditState extends State<Credit> {
 
   Widget formSurName() => Expanded(
         child: TextFormField(
+          validator: (value) {
+            if (value!.isEmpty) {
+              return 'กรุณาใส่นามสกุล';
+            } else {
+              return null;
+            }
+          },
           decoration: InputDecoration(
             label: ShowTitle(
               title: 'นามสกุล',
