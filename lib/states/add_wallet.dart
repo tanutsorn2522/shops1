@@ -22,7 +22,7 @@ class _AddWalletState extends State<AddWallet> {
     Icons.account_balance_wallet,
     Icons.credit_card,
   ];
-  List<String> titles = ['Bank', 'PromptPay', 'Credit'];
+  List<String> titles = ['Bank', 'PromptPay', 'Credit Card'];
   int indexPosition = 0;
   List<BottomNavigationBarItem> bottomNavigationBarItems = [];
 
