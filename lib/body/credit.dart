@@ -1,7 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:shops/utility/my_constant.dart';
+import 'package:shops/utility/my_dialog.dart';
 import 'package:shops/widgets/show_title.dart';
+import 'package:omise_flutter/omise_flutter.dart';
+
+import 'package:http/http.dart' as http;
 
 class Credit extends StatefulWidget {
   const Credit({Key? key}) : super(key: key);
@@ -62,16 +68,59 @@ class _CreditState extends State<Credit> {
         child: ElevatedButton(
           onPressed: () {
             if (formKey.currentState!.validate()) {
-              expiryDateMouth = expiryDateStr!.substring(0, 2);
-              expiryDateYear = expiryDateStr!.substring(2, 6);
-              print(
-                  'idCard ==>> $idCard, expiryDateMouth ==>> $expiryDateMouth, expiryDateYear ==>> $expiryDateYear, cvc ==>> $cvc');
+              getTokenAndChargeOmise();
             }
           },
           child: Text('Add Money'),
         ),
       ),
     );
+  }
+
+  Future<void> getTokenAndChargeOmise() async {
+    String publicKey = MyConstant.publicKey;
+    OmiseFlutter omiseFlutter = OmiseFlutter(publicKey);
+    await omiseFlutter.token
+        .create(
+            '$name $surname', idCard!, expiryDateMouth!, expiryDateYear!, cvc!)
+        .then((value) async {
+      String token = value.id.toString();
+      //print('token ==>> $token');
+
+      String secreKey = MyConstant.secreKey;
+      String urlAPI = 'https://api.omise.co/charges';
+      String basicAuth = 'Basic ' + base64Encode(utf8.encode(secreKey + ":"));
+
+      Map<String, String> headerMap = {};
+      headerMap['authorization'] = basicAuth;
+      headerMap['Cache-Control'] = 'no-cache';
+      headerMap['Content-Type'] = 'application/x-www-form-urlencoded';
+
+      String zero = '00';
+      amount = '$amount$zero';
+      //print('amount00 ==>> $amount');
+
+      Map<String, dynamic> data = {};
+      data['amount'] = amount;
+      data['currency'] = 'thb';
+      data['card'] = token;
+
+      Uri uri = Uri.parse(urlAPI);
+
+      http.Response response = await http.post(
+        uri,
+        headers: headerMap,
+        body: data,
+      );
+
+      var resultCharge = json.decode(response.body);
+      //print('resultCharge ==>> $resultCharge');
+      print('status ของการตัดบัตร ===>>> ${resultCharge['status']}');
+    }).catchError((value) {
+      String title = value.code;
+      String message = value.message;
+      MyDialog().normalDialog(context, title, message);
+    });
   }
 
   Container buildExpiryCvc() {
@@ -159,6 +208,7 @@ class _CreditState extends State<Credit> {
             if (value!.isEmpty) {
               return 'กรุณาใส่ จำนวนเงิน';
             } else {
+              amount = value.trim();
               return null;
             }
           },
@@ -182,7 +232,17 @@ class _CreditState extends State<Credit> {
             if (expiryDateStr!.length != 6) {
               return 'กรุณาใส่ให้ครบ';
             } else {
-              return null;
+              expiryDateMouth = expiryDateStr!.substring(0, 2);
+              expiryDateYear = expiryDateStr!.substring(2, 6);
+
+              int expiryDateMouthInt = int.parse(expiryDateMouth!);
+              expiryDateMouth = expiryDateMouthInt.toString();
+
+              if (expiryDateMouthInt > 12) {
+                return 'เดือนมากกว่า 12 เดือน';
+              } else {
+                return null;
+              }
             }
           }
         },
@@ -226,6 +286,7 @@ class _CreditState extends State<Credit> {
             if (value!.isEmpty) {
               return 'กรุณาใส่ชื่อ';
             } else {
+              name = value.trim();
               return null;
             }
           },
@@ -244,6 +305,7 @@ class _CreditState extends State<Credit> {
             if (value!.isEmpty) {
               return 'กรุณาใส่นามสกุล';
             } else {
+              surname = value.trim();
               return null;
             }
           },

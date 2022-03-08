@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shops/utility/my_constant.dart';
+import 'package:shops/widgets/nav_confirm_add_wallet.dart';
 import 'package:shops/widgets/show_title.dart';
 
 class Bank extends StatefulWidget {
@@ -17,6 +18,7 @@ class _BankState extends State<Bank> {
       body: Column(
         children: [buildTitle(), buildKbank()],
       ),
+      floatingActionButton: NavConfirmAddWallet(),
     );
   }
 

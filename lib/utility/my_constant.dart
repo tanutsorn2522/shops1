@@ -5,6 +5,8 @@ class MyConstant {
   static String appName = 'CHANYONT';
   static String domain = 'http://110.164.195.163';
   static String urlPromptpay = 'https://promptpay.io/0973075354.png';
+  static String publicKey = 'pkey_test_5r2995varmhex0q182v';
+  static String secreKey = 'skey_test_5r2995vb26foqw210dr';
 
   // Route
   static String routeAuthen = '/authen';
@@ -16,6 +18,7 @@ class MyConstant {
   static String routeEditProfileSeller = '/editProficeSeller';
   static String routeShowCart = '/showCart';
   static String routeAddWallet = '/addWallet';
+  static String routeConfirmAddWallet = 'confirmAddWallet';
 
   // Image
   static String image0 = 'images/chanyontlogo.png';
