@@ -1,7 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:shops/utility/my_constant.dart';
+import 'package:shops/widgets/show_image.dart';
 import 'package:shops/widgets/show_title.dart';
 
 class ConfirmAddWallet extends StatefulWidget {
@@ -12,7 +15,8 @@ class ConfirmAddWallet extends StatefulWidget {
 }
 
 class _ConfirmAddWalletState extends State<ConfirmAddWallet> {
-  late String dateTimeStr;
+  String? dateTimeStr;
+  File? file;
 
   @override
   void initState() {
@@ -25,8 +29,10 @@ class _ConfirmAddWalletState extends State<ConfirmAddWallet> {
   void findCurrentTime() {
     DateTime dateTime = DateTime.now();
 
-    dateTimeStr = dateTime.toString();
-    print('dateTimeStr ==>> $dateTimeStr');
+    DateFormat dateFormat = DateFormat('dd/MM/yyyy HH:mm');
+
+    dateTimeStr = dateFormat.format(dateTime);
+    //print('dateTimeStr ==>> $dateTimeStr');
   }
 
   @override
@@ -45,16 +51,75 @@ class _ConfirmAddWalletState extends State<ConfirmAddWallet> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ShowTitle(
-            title: 'Current Date Pay',
-            textStyle: MyConstant().h1Style(),
-          ),
-          ShowTitle(
-            title: 'dd/mm/yy HH:mm',
-            textStyle: MyConstant().h2Style(),
-          )
+          newHeader(),
+          newDateTimePay(),
+          Spacer(),
+          newImage(),
+          Spacer(),
+          newButtonConfirm(),
         ],
       ),
+    );
+  }
+
+  Container newButtonConfirm() {
+    return Container(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: () {},
+        child: Text('Confirm Add Wallet'),
+      ),
+    );
+  }
+
+  Future<void> ProcessTakePhoto(ImageSource source) async {
+    try {
+      var result = await ImagePicker().pickImage(
+        source: source,
+        maxWidth: 800,
+        maxHeight: 800,
+      );
+      setState(() {
+        file = File(result!.path);
+      });
+    } catch (e) {}
+  }
+
+  Row newImage() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        IconButton(
+          onPressed: () => ProcessTakePhoto(ImageSource.camera),
+          icon: Icon(Icons.add_a_photo),
+        ),
+        Container(
+          width: 200,
+          height: 200,
+          child: file == null
+              ? ShowImage(path: 'images/bill.png')
+              : Image.file(file!),
+        ),
+        IconButton(
+          onPressed: () => ProcessTakePhoto(ImageSource.gallery),
+          icon: Icon(Icons.add_photo_alternate),
+        ),
+      ],
+    );
+  }
+
+  ShowTitle newDateTimePay() {
+    return ShowTitle(
+      title: dateTimeStr == null ? 'dd/MM/yyyy HH:mm' : dateTimeStr!,
+      textStyle: MyConstant().h2Style(),
+    );
+  }
+
+  ShowTitle newHeader() {
+    return ShowTitle(
+      title: 'Current Date Pay',
+      textStyle: MyConstant().h1Style(),
     );
   }
 }
